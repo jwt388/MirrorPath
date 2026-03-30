@@ -113,8 +113,16 @@ def mirror_path(data: dict) -> dict:
 # File I/O
 # ---------------------------------------------------------------------------
 def default_output_path(input_path: Path) -> Path:
-    """'MyPath.path'  →  'MyPath_mirrored.path' in the same directory."""
-    return input_path.with_stem(input_path.stem + "_mirrored")
+    """Mirrored path name in the same directory with left/right toggled or '_mirrored' added ."""
+    input_name = input_path.stem
+    if ("left" in input_name.lower()):
+        output_name = input_name.replace("left", "right").replace("Left", "Right")
+    elif ("right" in input_name.lower()):
+        output_name = input_name.replace("right", "left").replace("Right", "Left")
+    else:
+        output_name = input_name + "_mirrored"
+    
+    return input_path.with_stem(output_name)
 
 
 def mirror_path_file(input_path: Path, output_path: Path) -> None:
