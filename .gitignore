@@ -1,3 +1,4 @@
 *.path
 *.auto
 __pycache__/*
+deploy

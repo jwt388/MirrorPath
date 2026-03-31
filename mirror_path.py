@@ -26,6 +26,7 @@ pathlib, argparse).
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -73,6 +74,24 @@ def mirror_waypoint(waypoint: dict) -> None:
     if waypoint.get("nextControl") is not None:
         mirror_point(waypoint["nextControl"])
 
+# ---------------------------------------------------------------------------
+# Utility functions
+# ---------------------------------------------------------------------------
+def replace_preserving_case(text, old, new):
+    """Replace text while preserving the case of the original."""
+    def match_case(match):
+        matched = match.group()
+        if matched.isupper():
+            return new.upper()
+        elif matched.islower():
+            return new.lower()
+        elif matched.istitle():
+            return new.capitalize()
+        else:
+            return new # fallback: use replacement as-is
+            
+    return re.sub(old, match_case, text, flags=re.IGNORECASE)
+
 
 # ---------------------------------------------------------------------------
 # Core logic
@@ -116,9 +135,9 @@ def default_output_path(input_path: Path) -> Path:
     """Mirrored path name in the same directory with left/right toggled or '_mirrored' added ."""
     input_name = input_path.stem
     if ("left" in input_name.lower()):
-        output_name = input_name.replace("left", "right").replace("Left", "Right")
+        output_name = replace_preserving_case(input_name, "left", "right")
     elif ("right" in input_name.lower()):
-        output_name = input_name.replace("right", "left").replace("Right", "Left")
+        output_name = replace_preserving_case(input_name, "right", "left")
     else:
         output_name = input_name + "_mirrored"
     

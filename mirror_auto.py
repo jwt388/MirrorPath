@@ -17,35 +17,7 @@ import re
 import shutil
 import sys
 from pathlib import Path
-from mirror_path import mirror_path_file, default_output_path
-
-def swap_left_right(text: str) -> str:
-    """Replace all occurrences of 'left'/'Left'/'LEFT' with the right equivalents."""
-
-    def replace(match: re.Match) -> str:
-        word = match.group()
-        if word.isupper():
-            return "RIGHT"
-        elif word[0].isupper():
-            return "Right"
-        else:
-            return "right"
-
-    return re.sub(r"\bleft\b", replace, text, flags=re.IGNORECASE)
-
-def swap_right_left(text: str) -> str:
-    """Replace all occurrences of 'right'/'Right'/'RIGHT' with the left equivalents."""
-
-    def replace(match: re.Match) -> str:
-        word = match.group()
-        if word.isupper():
-            return "LEFT"
-        elif word[0].isupper():
-            return "Left"
-        else:
-            return "left"
-
-    return re.sub(r"\bright\b", replace, text, flags=re.IGNORECASE)
+from mirror_path import mirror_path_file, default_output_path, replace_preserving_case
 
 def copy_and_swap(source_path: str, dest_path: str | None = None) -> Path:
     source = Path(source_path)
@@ -55,10 +27,10 @@ def copy_and_swap(source_path: str, dest_path: str | None = None) -> Path:
         
     # Determine if we are starting with a Left or Right side auto
     if ("left" in source.stem.lower()):
-        new_stem = swap_left_right(source.stem)
+        new_stem = replace_preserving_case(source.stem, "left", "right")
         left_input = True
     elif ("right" in source.stem.lower()):
-        new_stem = swap_right_left(source.stem)
+        new_stem = replace_preserving_case(source.stem, "right", "left")
         left_input = False
     else:
         raise ValueError("Auto to mirror must be a left or right side auto.")
@@ -77,10 +49,10 @@ def copy_and_swap(source_path: str, dest_path: str | None = None) -> Path:
 
     text = source.read_text(encoding="utf-8")
     if left_input:
-        swapped = swap_left_right(text)
+        swapped = replace_preserving_case(text, "left", "right")
         changes = text.count("left") + text.count("Left") + text.count("LEFT")
     else:
-        swapped = swap_right_left(text)
+        swapped = replace_preserving_case(text, "right", "left")
         changes = text.count("right") + text.count("Right") + text.count("RIGHT")
 
     dest.write_text(swapped, encoding="utf-8")
