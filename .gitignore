@@ -2,3 +2,4 @@
 *.auto
 __pycache__/*
 deploy
+examples

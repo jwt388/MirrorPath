@@ -89,15 +89,10 @@ def extract_path_names(obj, found: list[str] | None = None) -> list[str]:
 
     return found
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python mirror_auto.py <source_file> [destination_file]")
-        print("  source_file      Path to the PathPlanner .auto file")
-        print("  destination_file (optional) Output path; defaults to same folder with 'left' / 'right' reversed in filename")
-        sys.exit(1)
-
-    src = sys.argv[1]
-    dst = sys.argv[2] if len(sys.argv) > 2 else None
+# ---------------------------------------------------------------------------
+# Core logic
+# ---------------------------------------------------------------------------
+def mirror_auto(src: str, dst: str | None = None) -> None:
     # Create the new mirrored auto routine
     copy_and_swap(src, dst)  
     
@@ -118,4 +113,17 @@ if __name__ == "__main__":
                 dest_path: Path = default_output_path(source_path)
                 mirror_path_file(source_path, dest_path)
                 print(f"Mirrored '{source_path.name}' → '{dest_path.name}'")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python mirror_auto.py <source_file> [destination_file]")
+        print("  source_file      Path to the PathPlanner .auto file")
+        print("  destination_file (optional) Output path; defaults to same folder with 'left' / 'right' reversed in filename")
+        sys.exit(1)
+
+    src = sys.argv[1]
+    dst = sys.argv[2] if len(sys.argv) > 2 else None
+
+    mirror_auto(src, dst)
+
           
