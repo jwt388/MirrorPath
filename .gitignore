@@ -1,2 +1,3 @@
 *.path
 *.auto
+__pycache__/*

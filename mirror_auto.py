@@ -4,7 +4,7 @@ mirror_auto.py
 
 Reads a PathPlanner Auto Routine (.auto) file and writes a new file with the path
 names reversed bewtween "left" and "right". The input file must include "left" or "right"
-to specify the side.
+to specify the side. Each path in the auto is also mirrored left/right.
 
 Usage:
   python mirror_auto.py <input.path> [output.path]
@@ -12,10 +12,12 @@ Usage:
 If output path is omitted, the mirrored file is written in the same folder with 
 "left" and "right" reversed in filename.
 """
+import json
 import re
 import shutil
 import sys
 from pathlib import Path
+from mirror_path import mirror_path_file, default_output_path
 
 def swap_left_right(text: str) -> str:
     """Replace all occurrences of 'left'/'Left'/'LEFT' with the right equivalents."""
@@ -87,6 +89,33 @@ def copy_and_swap(source_path: str, dest_path: str | None = None) -> Path:
     print(f"Replaced {changes} occurrence(s) of 'left' / 'right'.")
     return dest
 
+def list_path_names(file_path: str) -> list[str]:
+    """Return all pathName values found in a PathPlanner .auto file."""
+    source = Path(file_path)
+
+    if not source.exists():
+        raise FileNotFoundError(f"File not found: {source}")
+
+    data = json.loads(source.read_text(encoding="utf-8"))
+    path_names = extract_path_names(data)
+    return path_names
+
+
+def extract_path_names(obj, found: list[str] | None = None) -> list[str]:
+    """Recursively walk the JSON structure and collect every 'pathName' value."""
+    if found is None:
+        found = []
+
+    if isinstance(obj, dict):
+        if "pathName" in obj and isinstance(obj["pathName"], str):
+            found.append(obj["pathName"])
+        for value in obj.values():
+            extract_path_names(value, found)
+    elif isinstance(obj, list):
+        for item in obj:
+            extract_path_names(item, found)
+
+    return found
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -97,4 +126,23 @@ if __name__ == "__main__":
 
     src = sys.argv[1]
     dst = sys.argv[2] if len(sys.argv) > 2 else None
-    copy_and_swap(src, dst)
+    # Create the new mirrored auto routine
+    copy_and_swap(src, dst)  
+    
+    # Find the paths that need to be mirrored
+    path_names = list_path_names(src)
+
+    if not path_names:
+        print("No pathName entries found.")
+    else:
+        print(f"Found {len(path_names)} pathName entry/entries:")
+        for name in path_names:
+            source_path = Path(name+".path")
+            
+            if not source_path.exists():
+                print(f"Error: source path file not found: {source_path}", file=sys.stderr)
+            else:
+                dest_path: Path = default_output_path(source_path)
+                mirror_path_file(source_path, dest_path)
+                print(f"Mirrored '{source_path}' → '{dest_path}'")
+          
