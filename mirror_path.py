@@ -40,16 +40,12 @@ FIELD_WIDTH_METERS = 8.07 # 2026 (Rebuilt) field width
 # Angle helper
 # ---------------------------------------------------------------------------
 def mirror_angle(degrees: float) -> float:
-    """Reflect a heading/rotation angle across the Y axis.
+    """Reflect a heading/rotation angle across the X axis.
 
-    Mirrors using  angle' = 180 - angle  then normalises to (-180, 180].
+    Mirrors using  angle' = - angle.
     """
-    mirrored = 180.0 - degrees
-    # Normalise to (-180, 180]
-    while mirrored > 180.0:
-        mirrored -= 360.0
-    while mirrored <= -180.0:
-        mirrored += 360.0
+    mirrored = -degrees
+
     return mirrored
 
 
