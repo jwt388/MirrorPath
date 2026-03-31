@@ -108,13 +108,14 @@ if __name__ == "__main__":
         print("No pathName entries found.")
     else:
         print(f"Found {len(path_names)} pathName entry/entries:")
+        path_dir = Path(src).resolve().parents[1] / "paths"
         for name in path_names:
-            source_path = Path(name+".path")
+            source_path = (path_dir / name).with_suffix(".path")
             
             if not source_path.exists():
                 print(f"Error: source path file not found: {source_path}", file=sys.stderr)
             else:
                 dest_path: Path = default_output_path(source_path)
                 mirror_path_file(source_path, dest_path)
-                print(f"Mirrored '{source_path}' → '{dest_path}'")
+                print(f"Mirrored '{source_path.name}' → '{dest_path.name}'")
           
