@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 """
 mirror_auto.py
 
 Reads a PathPlanner Auto Routine (.auto) file and writes a new file with the path
-names reversed bewtween "left" and "right". The input file must include "left" or "right"
+names reversed between "left" and "right". The input file must include "left" or "right"
 to specify the side. Each path in the auto is also mirrored left/right.
 
 Usage:

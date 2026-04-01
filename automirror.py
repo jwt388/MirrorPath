@@ -1,3 +1,15 @@
+"""
+automirror.py
+
+TK GUI program for mirroring PathPlanner Auto Routine (.auto) files and Path files (.path).
+
+The input file name must include "left" or "right" to specify the side. Each path in the auto 
+is also mirrored left/right.
+
+Usage:
+  python automirror.py
+
+"""
 from pathlib import Path
 import sys
 import tkinter as tk
@@ -6,7 +18,7 @@ from mirror_auto import mirror_auto
 from mirror_path import mirror_path_file, default_output_path
 
 
-# --- Functions to select auto and pathfiles and mirror them ---
+# --- Functions to select auto and path files and mirror them ---
 def select_and_mirror_auto():
     file_path = filedialog.askopenfilename(
         title="Select a file",

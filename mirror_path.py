@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 """
 mirror_path.py
 
 Reads a PathPlanner (.path) file and writes a new file with the path
-mirrored left-to-right across the field's vertical centre line.
+mirrored left-to-right from drive team perspective across the field's centre line.
 
 PathPlanner uses an FRC field coordinate system where:
   X  – runs along the long axis of the field
@@ -11,7 +10,7 @@ PathPlanner uses an FRC field coordinate system where:
 
 A left-right mirror flips Y:   y' = FIELD_WIDTH - y
 Headings / rotation angles are also reflected:
-  angle' = 180° - angle   (normalised to (-180, 180])
+  angle' = - angle
 
 Usage:
   python mirror_path.py <input.path> [output.path]
@@ -20,8 +19,6 @@ If output path is omitted, the mirrored file is written next to the input
 with "_mirrored" appended before the extension, e.g.:
   MyPath.path  →  MyPath_mirrored.path
 
-No third-party dependencies — uses only the standard library (json, sys,
-pathlib, argparse).
 """
 
 import argparse
