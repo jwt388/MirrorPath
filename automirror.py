@@ -64,33 +64,33 @@ class ConsoleRedirector:
 
 # --- Main window ---
 root = tk.Tk()
-root.title("PathPlanner Auto-Mirror Tool")
+root.title("PathPlanner Auto Mirror Tool")
 root.geometry("800x600")
 root.resizable(False, False)
-root.configure(bg="#f4f6f9")
+root.configure(bg="#151515")
 
 # Title
-tk.Label(root, text="PathPlanner Auto-Mirror", font=("Helvetica", 16, "bold"),
-         bg="#f4f6f9", fg="#1a1a2e").pack(pady=(24, 4))
+tk.Label(root, text="PathPlanner Auto Mirror", font=("Helvetica", 16, "bold"),
+         bg="#151515", fg="#fffb02").pack(pady=(24, 4))
 
 # Buttons
 tk.Button(root, text="📂  Select Auto File", command=select_and_mirror_auto,
-          font=("Helvetica", 11, "bold"), bg="#4f8ef7", fg="white",
+          font=("Helvetica", 11, "bold"), bg="#313843", fg="white",
           activebackground="#3a6fd8", activeforeground="white",
           relief="flat", padx=16, pady=8, cursor="hand2").pack(pady=18)
 
 tk.Button(root, text="📂  Select Path File", command=select_and_mirror_path,
-          font=("Helvetica", 11, "bold"), bg="#4f8ef7", fg="white",
+          font=("Helvetica", 11, "bold"), bg="#313843", fg="white",
           activebackground="#3a6fd8", activeforeground="white",
           relief="flat", padx=16, pady=8, cursor="hand2").pack(pady=18)
 
 # File path display
 path_var = tk.StringVar(value="No file selected")
-tk.Label(root, textvariable=path_var, font=("Helvetica", 9), bg="#f4f6f9",
-         fg="#888", wraplength=560).pack()
+tk.Label(root, textvariable=path_var, font=("Helvetica", 9), bg="#151515",
+         fg="#FFA007", wraplength=560).pack()
 
 # Text widget for console output
-console_text = tk.Text(root, wrap='word', height=20, width=80, state='disabled', bg='black', fg='white')
+console_text = tk.Text(root, wrap='word', height=20, width=80, state='disabled', bg="#1e1e1e", fg='white')
 console_text.pack(padx=10, pady=10, fill='both', expand=True)
 
 # Redirect stdout and stderr
